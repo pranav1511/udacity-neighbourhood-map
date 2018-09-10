@@ -1,3 +1,10 @@
 var initMap = function() {
-    console.log("map initialized");
+    
+    const ViewModel = function () {
+        const self = this;
+        console.log("ViewModel initialized");
+
+    };
+
+    ko.applyBindings(new ViewModel());
 }
