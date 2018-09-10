@@ -32,7 +32,18 @@ const Place = function (data) {
     this.position = ko.observable(data.position);
     this.foursquare_id = ko.observable(data.foursquare_id);
     this.marker = ko.observable();
+    this.photo = ko.observable();
+    this.shortURI = ko.observable();
 }
+
+
+const foursquareAPI = {
+    "base_uri": "https://api.foursquare.com/v2/",
+    "secrets": "client_id=4GBAZD3JKK2CFWLUDCNHSU04GGEJQPRG3XXK2KBVBGO5E22Q"
+        + "&client_secret=5WHGV1CI0UEWKUWVVORSBIORFM5WRRGXVDGC2JYRTDJY4L14"
+        + "&v=20180323"
+};
+
 
 let map;
 let infoWindow;
@@ -52,15 +63,38 @@ var initMap = function () {
     });
 
     bounds = new google.maps.LatLngBounds();
-    
-    const populateInfoWindow = function(marker, place) {
-        content = place.name();
 
-        infoWindow.setContent(content);
-        infoWindow.open(map, marker);
+    const addInfoWindow = function (place) {
+        place.marker().addListener("click", function () {
 
-        infoWindow.addListener("closeclick", function () {
-            infoWindow.setMarker = null;
+            content = "";
+            content += "<div>";
+            content += "<p>" + place.name() + "</p>";
+            content += "<div><a target='_blank' href='" + place.shortURI() + "'>More on Foursquare</a></div>";
+            content += "<div><img src='" + place.photo() + "'></div><br>";
+            content += "<div><img style='width:150px;' src='./images/foursquare.png'></div>";
+            content += "</div>";
+
+            infoWindow.setContent(content);
+            infoWindow.open(map, place.marker());
+
+            infoWindow.addListener("closeclick", function () {
+                infoWindow.setMarker = null;
+            });
+        });
+    }
+
+    const addInfoWindowWithError = function (place) {
+        place.marker().addListener("click", function () {
+
+            content = "Foursquare data could not be loaded.";
+
+            infoWindow.setContent(content);
+            infoWindow.open(map, place.marker());
+
+            infoWindow.addListener("closeclick", function () {
+                infoWindow.setMarker = null;
+            });
         });
     }
 
@@ -81,9 +115,19 @@ var initMap = function () {
                 animation: google.maps.Animation.DROP
             }));
 
-            place.marker().addListener("click", function () {
-                const that = this;
-                populateInfoWindow(this, place);
+            const requestURI = foursquareAPI.base_uri + "venues/" + initialPlace.foursquare_id + "?" + foursquareAPI.secrets;
+            $.getJSON(requestURI, function (response) {
+                if (response.meta.code == 200) {
+                    place.shortURI(response.response.venue.shortUrl);
+                    place.photo(response.response.venue.bestPhoto.prefix + "150x150" + response.response.venue.bestPhoto.suffix);
+
+                    addInfoWindow(place);
+                }
+                else {
+                    addInfoWindowWithError(place);
+                }
+            }).fail(function () {
+                addInfoWindowWithError(place);
             });
 
             bounds.extend(place.position());
