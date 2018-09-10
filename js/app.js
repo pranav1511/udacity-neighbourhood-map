@@ -35,6 +35,8 @@ const Place = function (data) {
 }
 
 let map;
+let infoWindow;
+
 var initMap = function () {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 48.8676305, lng: 2.349539600000071 },
@@ -43,6 +45,22 @@ var initMap = function () {
         fullscreenControl: false,
         mapTypeControl: false
     });
+
+    infoWindow = new google.maps.InfoWindow({
+        maxWidth: 150
+    });
+    
+    const populateInfoWindow = function(marker, place) {
+        content = place.name();
+
+        infoWindow.setContent(content);
+        infoWindow.open(map, marker);
+
+        infoWindow.addListener("closeclick", function () {
+            infoWindow.setMarker = null;
+        });
+    }
+
 
     const ViewModel = function () {
         const self = this;
@@ -59,6 +77,13 @@ var initMap = function () {
                 title: place.name(),
                 animation: google.maps.Animation.DROP
             }));
+
+            place.marker().addListener("click", function () {
+                const that = this;
+                populateInfoWindow(this, place);
+            });
+
+
             self.placeList.push(place);
         });
 
