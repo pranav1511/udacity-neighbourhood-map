@@ -103,6 +103,7 @@ var initMap = function () {
         const self = this;
 
         this.filter = ko.observable();
+        this.sidebar = ko.observable(false);
         this.placeList = ko.observableArray([]);
 
         InitialPlaces.forEach(function (initialPlace) {
@@ -172,6 +173,21 @@ var initMap = function () {
         this.itemClicked = function (place) {
             google.maps.event.trigger(place.marker(), "click");
         }
+
+        this.toggleClicked = function () {
+            self.sidebar(!self.sidebar());
+        }
+
+        this.toggleSidebar = ko.computed(function () {
+            if (self.sidebar()) {
+                document.getElementById("sidebar-content").style.width = "200px";
+                document.getElementById("main-content").style.marginLeft = "200px";
+            }
+            else {
+                document.getElementById("sidebar-content").style.width = "0";
+                document.getElementById("main-content").style.marginLeft = "0";
+            }
+        });
 
     };
 

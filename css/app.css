@@ -1,3 +1,88 @@
+html, body {
+	font-family: 'Roboto', sans-serif;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 #map {
-	height: 500px;
+    height: calc(100% - 48px);
+    height: -moz-calc(100% - 48px);
+    height: -webkit-calc(100% - 48px);
+    height: -o-calc(100% - 48px);
+}
+
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 48px;
+}
+
+.sidebar input {
+	display: block;
+    height: 30px;
+	padding-left: 8px;
+	margin-left: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+.sidebar ul {
+    padding: 0px;
+}
+
+.sidebar ul li {
+    padding: 8px 8px 8px 16px;
+    text-decoration: none;
+    font-size: 14px;
+    color: #818181;
+    display: block;
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+.sidebar ul li:hover {
+    color: #f1f1f1;
+}
+
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #111;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+.openbtn:hover {
+    background-color: #444;
+}
+
+.navbar {
+	display: flex;
+	background-color: #111;
+}
+
+.heading {
+	color: white;
+	font-size: 20px;
+	margin: auto;
+	font-weight: 400;
+}
+
+.main {
+	height: 100%;
+    transition: margin-left .3s;
 }
