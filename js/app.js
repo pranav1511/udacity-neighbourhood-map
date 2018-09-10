@@ -36,6 +36,7 @@ const Place = function (data) {
 
 let map;
 let infoWindow;
+let bounds;
 
 var initMap = function () {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -49,6 +50,8 @@ var initMap = function () {
     infoWindow = new google.maps.InfoWindow({
         maxWidth: 150
     });
+
+    bounds = new google.maps.LatLngBounds();
     
     const populateInfoWindow = function(marker, place) {
         content = place.name();
@@ -83,9 +86,11 @@ var initMap = function () {
                 populateInfoWindow(this, place);
             });
 
-
+            bounds.extend(place.position());
             self.placeList.push(place);
         });
+
+        map.fitBounds(bounds);
 
         this.placeList.sort(function (left, right) {
             return left.name() == right.name() ? 0 : (left.name() < right.name() ? -1 : 1);
