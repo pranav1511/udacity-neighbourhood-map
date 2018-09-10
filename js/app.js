@@ -47,6 +47,10 @@ var initMap = function () {
             self.placeList.push(place);
         });
 
+        this.placeList.sort(function (left, right) {
+            return left.name() == right.name() ? 0 : (left.name() < right.name() ? -1 : 1);
+        });
+
         this.filteredPlaceList = ko.computed(function () {
             if (!self.filter()) {
                 return self.placeList();
