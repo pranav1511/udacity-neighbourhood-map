@@ -31,6 +31,7 @@ const Place = function (data) {
     this.name = ko.observable(data.name);
     this.position = ko.observable(data.position);
     this.foursquare_id = ko.observable(data.foursquare_id);
+    this.marker = ko.observable();
 }
 
 let map;
@@ -51,6 +52,13 @@ var initMap = function () {
 
         InitialPlaces.forEach(function (initialPlace) {
             const place = new Place(initialPlace);
+            place.marker(new google.maps.Marker({
+                position: place.position(),
+                map: map,
+                visible: false,
+                title: place.name(),
+                animation: google.maps.Animation.DROP
+            }));
             self.placeList.push(place);
         });
 
@@ -67,6 +75,17 @@ var initMap = function () {
                     return item.name().toLowerCase().startsWith(self.filter());
                 });
             }
+        });
+
+        this.markers = ko.computed(function () {
+            self.placeList().forEach(function (place) {
+                if (self.filteredPlaceList().indexOf(place) != -1) {
+                    place.marker().setVisible(true);
+                }
+                else {
+                    place.marker().setVisible(false);
+                }
+            });
         });
     };
 
