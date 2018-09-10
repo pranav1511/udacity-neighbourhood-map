@@ -33,8 +33,15 @@ const Place = function (data) {
     this.foursquare_id = ko.observable(data.foursquare_id);
 }
 
-
+let map;
 var initMap = function () {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: 48.8676305, lng: 2.349539600000071 },
+        zoom: 13,
+        clickableIcons: false,
+        fullscreenControl: false,
+        mapTypeControl: false
+    });
 
     const ViewModel = function () {
         const self = this;
