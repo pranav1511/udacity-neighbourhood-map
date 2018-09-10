@@ -115,6 +115,13 @@ var initMap = function () {
                 animation: google.maps.Animation.DROP
             }));
 
+            place.marker().addListener("click", function () {
+                place.marker().setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function () {
+                    place.marker().setAnimation(null);
+                }, 700);
+            });
+
             const requestURI = foursquareAPI.base_uri + "venues/" + initialPlace.foursquare_id + "?" + foursquareAPI.secrets;
             $.getJSON(requestURI, function (response) {
                 if (response.meta.code == 200) {
@@ -161,7 +168,7 @@ var initMap = function () {
                 }
             });
         });
-        
+
         this.itemClicked = function (place) {
             google.maps.event.trigger(place.marker(), "click");
         }
