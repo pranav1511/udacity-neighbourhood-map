@@ -14,7 +14,8 @@
 </head>
 
 <body>
-    <ul data-bind="foreach: placeList">
+    <input data-bind="textInput: filter" type="text">
+    <ul data-bind="foreach: filteredPlaceList">
         <li data-bind="text: name"></li>
     </ul>
 

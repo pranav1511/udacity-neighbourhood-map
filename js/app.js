@@ -39,11 +39,23 @@ var initMap = function () {
     const ViewModel = function () {
         const self = this;
 
+        this.filter = ko.observable();
         this.placeList = ko.observableArray([]);
 
         InitialPlaces.forEach(function (initialPlace) {
             const place = new Place(initialPlace);
             self.placeList.push(place);
+        });
+
+        this.filteredPlaceList = ko.computed(function () {
+            if (!self.filter()) {
+                return self.placeList();
+            }
+            else {
+                return ko.utils.arrayFilter(self.placeList(), function (item) {
+                    return item.name().toLowerCase().startsWith(self.filter());
+                });
+            }
         });
     };
 
