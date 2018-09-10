@@ -161,6 +161,11 @@ var initMap = function () {
                 }
             });
         });
+        
+        this.itemClicked = function (place) {
+            google.maps.event.trigger(place.marker(), "click");
+        }
+
     };
 
     ko.applyBindings(new ViewModel());

@@ -16,7 +16,7 @@
 <body>
     <input data-bind="textInput: filter" type="text">
     <ul data-bind="foreach: filteredPlaceList">
-        <li data-bind="text: name"></li>
+        <li data-bind="text: name, click: $parent.itemClicked"></li>
     </ul>
 
     <div id="map"></div>
