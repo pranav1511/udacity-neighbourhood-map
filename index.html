@@ -6,27 +6,34 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- Roboto Font -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
-    
+
+    <!-- Application CSS -->
     <link rel="stylesheet" href="./css/app.css">
 
     <title>Bengaluru NightLife | Udacity Neighbourhood Map</title>
 </head>
 
 <body>
-
+    <!-- Sidebar -->
     <div id="sidebar-content" class="sidebar">
-            <input data-bind="textInput: filter" type="text" placeholder="Filter">
+        <input data-bind="textInput: filter" type="text" placeholder="Filter">
         <ul data-bind="foreach: filteredPlaceList">
             <li data-bind="text: name, click: $parent.itemClicked"></li>
         </ul>
     </div>
 
+    <!-- Main content -->
     <div id="main-content" class="main">
+
+        <!-- Navbar -->
         <div class="navbar">
             <button class="openbtn" data-bind="click: toggleClicked">☰</button>
             <h1 class="heading">Bengaluru NightLife</h1>
         </div>
+
+        <!-- Google map -->
         <div id="map"></div>
     </div>
 

@@ -1,3 +1,4 @@
+// Model for the app which will be used to show the markers to the users.
 const InitialPlaces = [
     {
         "name": "Koramangala Social",
@@ -27,6 +28,7 @@ const InitialPlaces = [
 ];
 
 
+// Creating place object
 const Place = function (data) {
     this.name = ko.observable(data.name);
     this.position = ko.observable(data.position);
@@ -37,6 +39,7 @@ const Place = function (data) {
 }
 
 
+// Foursquare API details
 const foursquareAPI = {
     "base_uri": "https://api.foursquare.com/v2/",
     "secrets": "client_id=4GBAZD3JKK2CFWLUDCNHSU04GGEJQPRG3XXK2KBVBGO5E22Q"
@@ -49,7 +52,9 @@ let map;
 let infoWindow;
 let bounds;
 
+// Callback function for Google Maps API
 var initMap = function () {
+    // Initialize map with a center and zoom
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 48.8676305, lng: 2.349539600000071 },
         zoom: 13,
@@ -58,12 +63,15 @@ var initMap = function () {
         mapTypeControl: false
     });
 
+    // Initialize info window
     infoWindow = new google.maps.InfoWindow({
         maxWidth: 150
     });
 
+    // Initialize bounds for the map
     bounds = new google.maps.LatLngBounds();
 
+    // Create the info winow for every marker with the content
     const addInfoWindow = function (place) {
         place.marker().addListener("click", function () {
 
@@ -84,6 +92,7 @@ var initMap = function () {
         });
     }
 
+    //Create the info window for every marker with error message
     const addInfoWindowWithError = function (place) {
         place.marker().addListener("click", function () {
 
@@ -99,6 +108,7 @@ var initMap = function () {
     }
 
 
+    // ViewModel for KnockoutJS
     const ViewModel = function () {
         const self = this;
 
@@ -106,8 +116,11 @@ var initMap = function () {
         this.sidebar = ko.observable(false);
         this.placeList = ko.observableArray([]);
 
+        // Push the places in placeList
         InitialPlaces.forEach(function (initialPlace) {
             const place = new Place(initialPlace);
+
+            // Initialize marker
             place.marker(new google.maps.Marker({
                 position: place.position(),
                 map: map,
@@ -116,6 +129,7 @@ var initMap = function () {
                 animation: google.maps.Animation.DROP
             }));
 
+            // Add animation to the marker
             place.marker().addListener("click", function () {
                 place.marker().setAnimation(google.maps.Animation.BOUNCE);
                 setTimeout(function () {
@@ -123,6 +137,7 @@ var initMap = function () {
                 }, 700);
             });
 
+            // Foursquare API GET request
             const requestURI = foursquareAPI.base_uri + "venues/" + initialPlace.foursquare_id + "?" + foursquareAPI.secrets;
             $.getJSON(requestURI, function (response) {
                 if (response.meta.code == 200) {
@@ -144,10 +159,12 @@ var initMap = function () {
 
         map.fitBounds(bounds);
 
+        // Sort the list in the placeList lexicographically
         this.placeList.sort(function (left, right) {
             return left.name() == right.name() ? 0 : (left.name() < right.name() ? -1 : 1);
         });
 
+        // Filter the placeList
         this.filteredPlaceList = ko.computed(function () {
             if (!self.filter()) {
                 return self.placeList();
@@ -159,6 +176,7 @@ var initMap = function () {
             }
         });
 
+        // Show markers for the filteredPlaceList
         this.markers = ko.computed(function () {
             self.placeList().forEach(function (place) {
                 if (self.filteredPlaceList().indexOf(place) != -1) {
@@ -170,10 +188,12 @@ var initMap = function () {
             });
         });
 
+        // Trigger marker click when a list element is clicked
         this.itemClicked = function (place) {
             google.maps.event.trigger(place.marker(), "click");
         }
 
+        // Toggle sidebar view
         this.toggleClicked = function () {
             self.sidebar(!self.sidebar());
         }
@@ -191,5 +211,6 @@ var initMap = function () {
 
     };
 
+    // Bind ViewModel to KnockoutJS
     ko.applyBindings(new ViewModel());
 }
